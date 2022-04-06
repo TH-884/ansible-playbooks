@@ -1,0 +1,26 @@
+---
+# tasks for Linux
+
+- name: golang | Download the Go installer
+  get_url:
+    url: https://go.dev/dl/go1.18.linux-amd64.tar.gz
+    dest: /tmp
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: golang | Extract the Go package
+  ansible.builtin.unarchive:
+    src: /tmp/go1.18.linux-amd64.tar.gz
+    dest: /usr/local
+  become: yes
+
+- name: golang | Add the path to a profile
+  blockinfile:
+    path: "/etc/profile"
+    block:
+      export PATH=$PATH:/usr/local/go/bin
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - golang"
+  become: yes
+  
+
+   
