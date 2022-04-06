@@ -47,39 +47,6 @@
     - ansible_system == "Linux"
     - pwsh_exists.stdout == ""
   
-- name: starship | Install Fira Code Nerd Font
-  get_url:
-    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-    dest: /tmp
-  become: no
-  environment: "{{ proxy_env }}"
-  when:
-    - ansible_system == "Linux"
-
-- name: starship | Create directory for Fira Code Nerd Font
-  file:
-    path: /usr/share/fonts/firacode
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  register: create_font_directory
-  become: yes
-  when:
-    - ansible_system == "Linux"
-
-- name: starship | Unzip Fira Code Nerd Font
-  ansible.builtin.unarchive:
-    src: /tmp/FiraCode.zip
-    dest: /usr/share/fonts/firacode
-  become: yes
-  when:
-    - ansible_system == "Linux"
-
-- name: starship | Update font caches
-  shell: fc-cache -vf
-  changed_when: false
-
 - name: starship | Copy config file
   file:
     src: "{{ role_path }}/files/starship.toml"
