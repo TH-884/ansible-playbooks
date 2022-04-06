@@ -1,0 +1,14 @@
+---
+# tasks file for powershell
+
+- name: pwsh | Check if pwsh exists
+  shell: type pwsh
+  register: pwsh_exists
+  failed_when: false
+
+- name: pwsh | Install powershell for Ubuntu
+  ansible.builtin.import_tasks:
+    file: ubuntu.yaml
+  when:
+    - pwsh_exists.rc != 0
+    - ansible_distribution == "Ubuntu"
