@@ -6,7 +6,7 @@ scan_timeout = 10
 
 # Format Powerline prompt
 format = """
-[\uE0B6](fg:#1C4961)[$directory](bg:#1C4961)[\uE0B0](fg:#1C4961 bg:#2F79A1)$git_branch[\uE0B0](fg:#2F79A1 bg:#3A95C7)$git_status[\uE0B0](#3A95C7 bg:#40A9E0)$time[\uE0B0](#40A9E0 bg:none) $all$character """
+[ ](bg:#1C4961)[$directory](bg:#1C4961)[\uE0B0](fg:#1C4961 bg:#2F79A1)$git_branch[\uE0B0](fg:#2F79A1 bg:#3A95C7)[$git_status](green bg:#3A95C7)[\uE0B0](#3A95C7 bg:#40A9E0)$time[\uE0B0](#40A9E0 bg:none) $all$character """
 
 [[battery.display]]
 threshold = 100
@@ -35,7 +35,7 @@ cherry_pick = "🍒 PICKING"
 
 [git_status]
 format = "[ $all_status$ahead_behind ]($style)"
-style = "bg:#3A95C7 fg:white"
+style = "bg:#3A95C7"
 conflicted = "💥"
 ahead = "🏎💨"
 behind = "🔙"
@@ -43,15 +43,13 @@ diverged = "😵"
 untracked = "❔"
 stashed = "📦"
 modified = "❗"
-staged = '[++\($count\)](green)'
-up_to_date = "✓"
+staged = '[(++\($count\))](fg:#005F00 bg:#3A95C7 bold)'
+up_to_date = "[✔](fg:#007F00 bg:#3A95C7)"
 renamed = "🖍"
 deleted = "🗑"
 
 [hostname]
 ssh_only = false
-prefix = "《"
-suffix = "》"
 trim_at = ""
 disabled = true
 
@@ -69,3 +67,9 @@ symbol = "📦"
 disabled = false
 format = "[ $time ]($style)"
 style = "bg:#40A9E0 fg:white"
+
+[username]
+style_root = "bold red"
+style_user = "bold white"
+show_always = true
+disabled = false
