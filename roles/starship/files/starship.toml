@@ -1,0 +1,71 @@
+# Enable the newline at the start of the prompt
+add_newline = true
+
+# Wait 10 milliseconds for starship to check files under the current directory.
+scan_timeout = 10
+
+# Format Powerline prompt
+format = """
+[\uE0B6](fg:#1C4961)[$directory](bg:#1C4961)[\uE0B0](fg:#1C4961 bg:#2F79A1)$git_branch[\uE0B0](fg:#2F79A1 bg:#3A95C7)$git_status[\uE0B0](#3A95C7 bg:#40A9E0)$time[\uE0B0](#40A9E0 bg:none) $all$character """
+
+[[battery.display]]
+threshold = 100
+style = "bold blue"
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡️"
+discharging_symbol = "🪦"
+
+[character]
+format = "$symbol"
+success_symbol = "[➡](bold green)"
+error_symbol = "❌"
+
+[directory]
+style = "bg:#1C4961 fg:white"
+
+[git_branch]
+format = "[ $symbol$branch ]($style)"
+style = "bg:#2F79A1 fg:white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+cherry_pick = "🍒 PICKING"
+
+[git_status]
+format = "[ $all_status$ahead_behind ]($style)"
+style = "bg:#3A95C7 fg:white"
+conflicted = "💥"
+ahead = "🏎💨"
+behind = "🔙"
+diverged = "😵"
+untracked = "❔"
+stashed = "📦"
+modified = "❗"
+staged = '[++\($count\)](green)'
+up_to_date = "✓"
+renamed = "🖍"
+deleted = "🗑"
+
+[hostname]
+ssh_only = false
+prefix = "《"
+suffix = "》"
+trim_at = ""
+disabled = true
+
+[memory_usage]
+format = "[${ram_pct}(${swap_pct})]($style) "
+threshold = -1
+symbol = " "
+style = "bold dimmed green"
+
+[package]
+style = "#ffc0cb"
+symbol = "📦"
+
+[time]
+disabled = false
+format = "[ $time ]($style)"
+style = "bg:#40A9E0 fg:white"

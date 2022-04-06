@@ -1,0 +1,91 @@
+---
+# tasks file for starship
+
+- name: starship | Set environment variables for rust
+  shell: "source {{ ansible_env.HOME }}/.profile"
+  when:
+    - ansible_system == "Linux"
+  become: no
+  
+- name: starship | Install Starship using cargo
+  shell: cargo install starship --locked
+  environment: "{{ proxy_env }}"
+
+- name: starship | Check if bash exists
+  shell: which bash
+  register: bash_exists
+  ignore_errors: yes
+  when:
+    - ansible_system == "Linux"
+
+- name: starship | Add the bootstrap code for starship
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      eval "$(starship init bash)"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - starship"
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.stdout != ""
+
+- name: starship | Check if PowerShell exists
+  shell: which bash
+  register: pwsh_exists 
+  ignore_errors: yes
+  when:
+    - ansible_system == "Linux"
+
+- name: starship | Add the bootstrap code for PowerShell
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.config/powershell/Microsoft.PowerShell_profile.ps1"
+    block: |
+      Invoke-Expression (&starship init powershell)
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - starship"
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pwsh_exists.stdout == ""
+  
+- name: starship | Install Fira Code Nerd Font
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+    dest: /tmp
+  become: no
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+
+- name: starship | Create directory for Fira Code Nerd Font
+  file:
+    path: /usr/share/fonts/firacode
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_font_directory
+  become: yes
+  when:
+    - ansible_system == "Linux"
+
+- name: starship | Unzip Fira Code Nerd Font
+  ansible.builtin.unarchive:
+    src: /tmp/FiraCode.zip
+    dest: /usr/share/fonts/firacode
+  become: yes
+  when:
+    - ansible_system == "Linux"
+
+- name: starship | Update font caches
+  shell: fc-cache -vf
+  changed_when: false
+
+- name: starship | Copy config file
+  file:
+    src: "{{ role_path }}/files/starship.toml"
+    dest: "{{ ansible_env.HOME }}/.config/starship.toml"
+    force: yes
+    state: hard
+  become: no
+  when:
+    - ansible_system == "Linux"

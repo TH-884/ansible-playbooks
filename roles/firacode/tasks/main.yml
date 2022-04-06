@@ -1,0 +1,52 @@
+---
+# tasks file for firacode
+
+- name: firacode | Check if Fira Code Fonts exsists
+  shell: fc-list | grep "Fira Code"
+  register: check_font
+  changed_when: check_font.stdout.find('Fira Code') == -1
+  when:
+    - ansible_system == "Linux"
+
+- name: firacode | Install Fira Code Nerd Font
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+    dest: /tmp
+  become: no
+  environment: "{{ proxy_env }}"
+  when:
+    - check_font.changed
+    - ansible_system == "Linux"
+
+- name: firacode | Create directory for Fira Code Nerd Font
+  file:
+    path: /usr/share/fonts/firacode
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  register: create_font_directory
+  become: yes
+  when:
+    - check_font.changed
+    - ansible_system == "Linux"
+
+- name: firacode | Unzip Fira Code Nerd Font
+  ansible.builtin.unarchive:
+    src: /tmp/FiraCode.zip
+    dest: /usr/share/fonts/firacode
+  become: yes
+  when:
+    - check_font.changed
+    - ansible_system == "Linux"
+
+- name: firacode | Update font caches
+  shell: fc-cache -vf
+  changed_when: false
+
+- name: firacode | Check if Fira Code Fonts exsists again
+  shell: fc-list | grep "Fira Code"
+  changed_when: false
+  failed_when: check_font.stdout.find('Fira Code') == -1
+  when:
+    - ansible_system == "Linux"
