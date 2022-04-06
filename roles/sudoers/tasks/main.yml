@@ -1,0 +1,11 @@
+---
+# tasks file for sudoers
+
+- name: sudoers | Ensure existed ansible_user in /etc/sudoers
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^{{ ansible_env.LOGNAME }} ALL='
+    line: '{{ ansible_env.LOGNAME }} ALL=NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+  become: yes
