@@ -12,9 +12,9 @@
   environment: "{{ proxy_env }}"
 
 - name: starship | Check if bash exists
-  shell: which bash
+  shell: type bash
   register: bash_exists
-  ignore_errors: yes
+  failed_when: false
   when:
     - ansible_system == "Linux"
 
@@ -27,14 +27,34 @@
   become: no
   when:
     - ansible_system == "Linux"
-    - bash_exists.stdout != ""
+    - bash_exists.rc == 0
 
 - name: starship | Check if PowerShell exists
-  shell: which bash
+  shell: type pwsh
   register: pwsh_exists 
-  ignore_errors: yes
+  failed_when: false
   when:
     - ansible_system == "Linux"
+
+- name: starship | Create PowerShell Profile directory
+  file:
+    path: "{{ ansible_env.HOME }}/.config/powershell"
+    state: directory
+    force: yes
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pwsh_exists.rc == 0
+
+- name: starship | Create PowerShell Profile
+  file:
+    path: "{{ ansible_env.HOME }}/.config/powershell/Microsoft.PowerShell_profile.ps1"
+    state: touch
+    force: yes
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pwsh_exists.rc == 0
 
 - name: starship | Add the bootstrap code for PowerShell
   blockinfile:
@@ -45,7 +65,7 @@
   become: no
   when:
     - ansible_system == "Linux"
-    - pwsh_exists.stdout == ""
+    - pwsh_exists.rc == 0
   
 - name: starship | Copy config file
   file:
