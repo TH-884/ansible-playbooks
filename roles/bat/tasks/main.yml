@@ -1,0 +1,20 @@
+---
+# tasks file for bat
+
+- name: bat | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: bat | Check if command exists
+  shell: type bat
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: bat | Install the command
+  shell: cargo install bat --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
