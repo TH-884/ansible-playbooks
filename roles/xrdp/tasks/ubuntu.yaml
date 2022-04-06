@@ -1,0 +1,70 @@
+---
+# task file for ubuntu
+
+- name: xrdp | Ensure installed xrdp (APT)
+  apt:
+    name: xrdp
+    state: present
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: xrdp | Add script to setup the ubuntu session properly
+  file:
+    src: "{{ role_path }}/files/startubuntu.sh"
+    dest: /etc/xrdp/startubuntu.sh
+    force: yes
+    state: hard
+    mode: a+x
+  become: yes
+
+- name: xrdp | Changed the allowed_users
+  replace:
+    path: /etc/xrdp/sesman.ini
+    regexp: 'startwm'
+    replace: 'startubuntu'
+  become: yes
+
+- name: xrdp | Rename the redirected drives to 'shared-drives'
+  replace:
+    path: /etc/xrdp/sesman.ini
+    regexp: 'FuseMountName=thiclient_drives'
+    replace: 'FuseMountName=shared-drives'
+  become: yes
+    
+- name: xrdp | Changed the allowed_users
+  replace:
+    path: /etc/X11/Xwrapper.config
+    regexp: '^allowed_users=console'
+    replace: 'allowed_users=anybody'
+  become: yes 
+
+- name: xrdp | Ensure existing the specific directory
+  shell: |
+    chmod 0755 /etc/polkit-1/localauthority
+    mkdir -p /etc/polkit-1/localauthority/50-local.d
+    chmod 0755 /etc/polkit-1/localauthority/50-local.d
+  become: yes
+
+# - name: xrdp | Ensure existing the specific directory
+#  file:
+#    path: /etc/polkit-1/localauthority/50-local.d
+#    state: directory
+#    mode: '0755'
+#  become: yes
+
+- name: xrdp | Configure the policy xrdp session
+  file:
+    src: "{{ role_path }}/files/45-allow-colord.pkla"
+    dest: /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
+    force: yes
+    state: hard
+  become: yes
+  
+- name: xrdp | https://askubuntu.com/questions/1193810/authentication-required-to-refresh-system-repositories-in-ubuntu-19-10
+  file:
+    src: "{{ role_path }}/files/46-allow-update-repo.pkla"
+    dest: /etc/polkit-1/localauthority/50-local.d/46-allow-update-repo.pkla
+    force: yes
+    state: hard
+  become: yes
+
