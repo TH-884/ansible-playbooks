@@ -1,0 +1,32 @@
+---
+# tasks file for tealdeer
+
+- name: tealdeer | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: tealdeer | Check if command exists
+  shell: type tealdeer
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: tealdeer | Install the command
+  shell: cargo install tealdeer --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
+- name: tealdeer | Download the bash completion file
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/dbrgn/tealdeer/main/completion/bash_tealdeer
+    dest: /usr/share/bash-completion/completions/tldr
+    force: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
