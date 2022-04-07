@@ -1,8 +1,11 @@
 # Enable the newline at the start of the prompt
 add_newline = true
 
-# Wait 10 milliseconds for starship to check files under the current directory.
-scan_timeout = 10
+# Wait 100 milliseconds for starship to check files under the current directory.
+scan_timeout = 100
+
+# Wait 1 second for starship to execute a command
+command_timeout = 1000
 
 # Format Powerline prompt
 format = """
@@ -34,7 +37,7 @@ charging_symbol = "[ ](fg:green)"
 discharging_symbol = "[💦](fg:yellow)"
 unknown_symbol = "[ ](fg:gray)"
 empty_symbol = "[ ](fg:red)"
-style = "fg:#666666"
+style = "fg:#999999"
 format = "[$symbol:$persentage]($style)"
 disabled = false
 
@@ -72,7 +75,7 @@ deleted = "🗑"
 [hostname]
 ssh_only = false
 trim_at = ""
-style = "bold fg:#333333"
+style = "bold fg:#666666"
 format = "[(@$hostname)]($style)"
 disabled = false
 
@@ -80,7 +83,7 @@ disabled = false
 format = " [${ram}( | ${swap})]($style)"
 threshold = -1
 symbol = " "
-style = "fg:#333333"
+style = "fg:#666666"
 disabled = false
 
 [package]
@@ -100,17 +103,17 @@ cmd_indicator = "cmd "
 nu_indicator = "nush "
 unknown_indicator = "??? "
 format = "[$indicator]($style)"
-style = "fg:#333333 bold"
+style = "fg:#666666 bold"
 disabled = false
 
 [time]
 disabled = false
-format = "[ $time ]($style)"
+format = "[  $time ]($style)"
 style = "bg:#40A9E0 fg:white"
 
 [username]
 style_root = "bold red"
-style_user = "bold fg:#666666"
+style_user = "bold fg:#999999"
 show_always = true
-format = "[ ](fg:#333333 bold) [$user]($style)"
+format = "[](fg:#666666 bold) [$user]($style)"
 disabled = false
