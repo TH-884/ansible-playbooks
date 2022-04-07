@@ -1,0 +1,13 @@
+---
+# tasks file for Ubuntu
+
+- name: fzf | Clone source code from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: "{{ ansible_env.HOME }}/.fzf"
+  environment: "{{ proxy_env }}"
+
+- name: fzf | Execute fzf install script
+  ansible.builtin.shell: "{{ ansible_env.HOME }}/.fzf/install"
+  become: no
+  environment: "{{ proxy_env }}"

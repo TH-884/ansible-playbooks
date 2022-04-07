@@ -1,0 +1,14 @@
+---
+# tasks file for fzf
+
+- name: fzf | Check if command exists
+  shell: type fzf
+  register: command_exists
+  failed_when: false
+
+- name: navi | Install the command
+  ansible.builtin.import_tasks:
+    file: ubuntu.yaml
+  when:
+    - command_exists.rc != 0
+    - ansible_distribution == "Ubuntu"
