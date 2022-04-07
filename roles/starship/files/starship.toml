@@ -47,6 +47,8 @@ success_symbol = "[➡](bold green)"
 error_symbol = "❌"
 
 [directory]
+read_only = " 🔒"
+read_only_style = "fg:#1C4961 bg:#1C4961"
 style = "bg:#1C4961 fg:white"
 
 [git_branch]

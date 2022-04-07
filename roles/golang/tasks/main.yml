@@ -1,14 +1,8 @@
 ---
 # tasks file for golang
 
-- name: golang | Check if go exists
-  shell: type go
-  register: go_exists
-  failed_when: false
-
 - name: golang | Download and install golang for Linux
   ansible.builtin.import_tasks:
     file: linux.yaml
   when:
     - ansible_system == "Linux"
-    - go_exists.rc != 0

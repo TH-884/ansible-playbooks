@@ -1,0 +1,169 @@
+---
+# tasks file for docker-cli-tools
+
+- name: docker-cli-tools | Check if go exists
+  shell: type go
+  register: go_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: dive | Check if dive exists
+  shell: type dive
+  register: dive_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- set_fact:
+    go_path: "{{ lookup('env', 'GOPATH') | default('/usr/local/go', true) }}"
+  when:
+     - go_exists.rc == 0
+
+- name: dive | Install dive cli tool for Ubuntu
+  apt:
+    deb: https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.deb
+  environment: "{{ proxy_env }}"
+  become: yes
+  when:
+    - go_exists.rc == 0
+    - dive_exists.rc != 0
+    - ansible_distribution == "Ubuntu"
+
+- name: lazydocker | Check if lazydocker exists
+  shell: type lazydocker
+  register: lazydocker_exists 
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: lazydocker | Install lazydocker cli tools via go install
+  shell: go install github.com/jesseduffield/lazydocker@latest
+  become: yes
+  environment: 
+    proxy_env: "{{ proxy_env }}"
+    GOPATH: "{{ go_path }}"
+    PATH: "{{ go_path }}/bin:{{ ansible_env.PATH }}"
+  when:
+    - go_exists.rc == 0
+    - lazydocker_exists.rc != 0
+    - ansible_system == "Linux"
+
+- name: dry | Check if dry exists
+  shell: type dry
+  register: dry_exists 
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+ 
+- name: dry | Download dry install script
+  ansible.builtin.uri:
+    url: https://moncho.github.io/dry/dryup.sh
+    return_content: yes
+  register: dry_installer
+  environment: "{{ proxy_env }}"
+  when:
+    - dry_exists.rc != 0
+    - ansible_system == "Linux"
+
+- name: dry | Install dry cli tool
+  ansible.builtin.shell:
+    cmd: sh
+    stdin: "{{ dry_installer.content }}"
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - dry_exists.rc != 0
+    - ansible_system == "Linux"
+
+- name: dry | Chenge access mode
+  ansible.builtin.file:
+    path: /usr/local/bin/dry
+    mode: 0755
+  become: yes
+  when:
+    - dry_exists.rc != 0
+    - ansible_system == "Linux"
+
+- name: docker-slim | Check if docker-slim exists
+  shell: type docker-slim
+  register: docker_slim_exists 
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: docker-slim | Download the docker-slim pachage
+  get_url:
+    url: https://downloads.dockerslim.com/releases/1.37.5/dist_linux.tar.gz
+    dest: /tmp/ds.tar.gz
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - ansible_machine == "x86_64"
+    - docker_slim_exists.rc != 0
+
+- name: docker-slim | Extract docker-slim package
+  ansible.builtin.unarchive:
+    src: /tmp/ds.tar.gz
+    dest: /tmp
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - docker_slim_exists.rc != 0
+
+- name: docker-slim | Install docker-slim package
+  ansible.builtin.file:
+    src: /tmp/dist_linux/docker-slim
+    dest: /usr/local/bin/
+    state: hard
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - docker_slim_exists.rc != 0
+
+- name: docker-slim | Install docker-slim-sensor package
+  ansible.builtin.file:
+    src: /tmp/dist_linux/docker-slim-sensor
+    dest: /usr/local/bin/
+    state: hard
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - docker_slim_exists.rc != 0
+
+- name: ctop | Check if ctop exists
+  shell: type ctop
+  register: ctop_exists 
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: ctop | Set up the repository
+  shell: |
+    echo "deb http://packages.azlux.fr/debian/ buster main" | sudo tee /etc/apt/sources.list.d/azlux.list
+  become: yes
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ctop_exists.rc != 0
+
+- name: ctop | Add ctop GPG key
+  ansible.builtin.apt_key:
+    url: https://azlux.fr/repo.gpg.key
+    state: present
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ctop_exists.rc != 0
+
+- name: ctop | Install ctop from APT
+  ansible.builtin.apt:
+    pkg: docker-ctop
+    update_cache: yes
+    state: latest
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ctop_exists.rc != 0

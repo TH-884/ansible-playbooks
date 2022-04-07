@@ -1,0 +1,53 @@
+---
+# tasks file for Ubuntu
+
+- name: docker | Install packages from APT
+  apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    update_cache: yes
+    state: latest
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - docker_exists.rc != 0
+
+
+- name: docker | Add Docker's official GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - docker_exists.rc != 0
+
+- name: docker | Set up the stable repository
+  shell: |
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - docker_exists.rc != 0
+
+- name: docker | Install Docker Engine
+  apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    update_cache: yes
+    state: latest
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - docker_exists.rc != 0
+
+- name: docker | Add {{ ansible_env.USER }} to the docker group
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    group: docker
+  become: yes
