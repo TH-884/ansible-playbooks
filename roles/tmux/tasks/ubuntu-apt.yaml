@@ -1,0 +1,10 @@
+---
+# tasks file for Ubuntu apt
+
+- name: tmux | Install tmux package from APT
+  apt:
+    pkg:
+      - tmux
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"

@@ -1,0 +1,89 @@
+---
+# tasks file for tmux
+
+- name: tmux | Check if tmux exists
+  shell: type tmux
+  register: tmux_exists
+  failed_when: false
+
+- name: tmux | Install tasks for Ubuntu
+  ansible.builtin.import_tasks:
+    file: ubuntu-apt.yaml
+  when:
+    - ansible_distribution == "Ubuntu"
+    - tmux_exists.rc != 0
+
+- name: tmux | Check if pip3 exists
+  shell: type pip3
+  register: pip3_exists
+  failed_when: false
+
+- name: tmux | Install Powerline status
+  pip:
+    name: 
+      - powerline-status
+      - powerline-mem-segment
+    executable: pip3
+    extra_args: --user
+  environment: "{{ proxy_env }}"
+  when:
+    - pip3_exists.rc == 0
+
+- name: tmux | Create tmux config file
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    state: touch
+  when:
+    - pip3_exists.rc == 0
+
+- name: tmux | Copy .tmux.conf
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/.tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+    
+
+- name: tmux | Ensure Powerline configuration in tmux.conf
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    block: |
+      source "{{ ansible_env.HOME }}/.local/lib/python3.8/site-packages/powerline/bindings/tmux/powerline.conf"
+      run-shell "powerline-daemon -q"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - powerline"
+  when:
+    - pip3_exists.rc == 0
+
+- name: tmux | Create tmux config directory
+  file:
+    path:
+      - "{{ ansible_env.HOME }}/.config/powerline"
+      - "{{ ansible_env.HOME }}/.config/powerline/colorschemes"
+      - "{{ ansible_env.HOME }}/.config/powerline/colorschemes/tmux"
+      - "{{ ansible_env.HOME }}/.config/powerline/themes"
+      - "{{ ansible_env.HOME }}/.config/powerline/themes/tmux"
+    state: directory
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+
+- name: tmux | Copy tmux config files
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/powerline/"
+    dest: "{{ ansible_env.HOME }}/.config/powerline/"
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+
+- name: tmux | Download the bash completion file
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux
+    dest: /usr/share/bash-completion/completions/tmux
+    force: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0

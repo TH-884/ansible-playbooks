@@ -1,0 +1,42 @@
+---
+# tasks file for Ubuntu
+
+- name: tmux | Install packages from APT
+  apt:
+    pkg:
+      - automake
+      - bison
+      - build-essential
+      - pkg-config
+      - libevent-dev
+      - libncurses5-dev
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: tmux | Clone source code form GitHub
+  ansible.builtin.git:
+    repo: https://github.com/tmux/tmux.git
+    dest: /usr/local/src/tmux
+  environment: "{{ proxy_env }}"
+  become: yes
+
+- name: tmux | Build tmux source code
+  shell: |
+    chmod +x autogen.sh
+    ./autogen.sh
+    ./configure --prefix=/usr/local
+    make
+    make install
+  args:
+    chdir: /usr/local/src/tmux
+  environment: "{{ proxy_env }}"
+  become: yes
+
+- name: tmux | Install python3-pip if absent
+  apt:
+    pkg:
+      - python3-pip
+    state: present
+  environment: "{{ proxy_env }}"
+  become: yes
