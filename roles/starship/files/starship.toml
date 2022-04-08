@@ -9,9 +9,10 @@ command_timeout = 1000
 
 # Format Powerline prompt
 format = """
-($username)($hostname)( $memory_usage)( $battery)( $aws)( $azure)
-[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#235A9F)$git_branch[\uE0B0](fg:#235A9F bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#559CE4)$time[\uE0B0](fg:#559CE4 bg:none) 
-$shell$character """
+[╭](fg:#666666)[$fill](fg:#666666)
+[│](fg:#666666)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
+[ ](fg:#666666 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#235A9F)$git_branch[\uE0B0](fg:#235A9F bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#559CE4)$time[\uE0B0](fg:#559CE4 bg:none) 
+[╰](fg:#666666)$shell$character """
 
 [aws]
 symbol = "[](fg:#F0861E)"
@@ -52,6 +53,14 @@ read_only_style = "fg:#174276 bg:#174276"
 style = "bg:#174276 fg:white"
 format = "[](fg:#ADD8FF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
 
+[dotnet]
+symbol = "[](fg:#ADD8FF bold)"
+style = "fg:#0078D4"
+format = "[$symbol ($version )([什](fg:#ADD8FF) $tfm)]($style)"
+
+[fill]
+symbol = "─"
+
 [git_branch]
 format = "[ $symbol$branch ]($style)"
 style = "bg:#235A9F fg:white"
@@ -72,8 +81,8 @@ stashed = "📦"
 modified = "❗"
 staged = '[(++\($count\))](fg:#005F00 bg:#0078D4 bold)'
 up_to_date = "[✔](fg:#007F00 bg:#0078D4)"
-renamed = "🖍"
-deleted = "🗑"
+renamed = "凜"
+deleted = ""
 
 [hostname]
 ssh_only = false
@@ -82,10 +91,15 @@ style = "bold fg:#0078D4"
 format = "[(@$hostname)]($style)"
 disabled = false
 
+[localip]
+ssh_only = false
+format = "[](fg:#ADD8FF) [$localipv4](fg:#0078D4)"
+disabled = false
+
 [memory_usage]
-format = "[](fg:#ADD8FF) [$ram](fg:#599CE4)( [|](fg:#ADD8FF) [$swap](fg:#0078D4))($style)"
+format = "[$symbol](fg:#ADD8FF) [$ram](fg:#599CE4)( [|](fg:#ADD8FF) [$swap](fg:#0078D4))($style)"
 threshold = -1
-symbol = " "
+symbol = ""
 style = "fg:#ADD8FF"
 disabled = false
 
