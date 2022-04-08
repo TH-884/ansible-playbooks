@@ -1,0 +1,23 @@
+---
+# tasks file for clang
+
+- name: clang | Check if clang exists
+  shell: type clang
+  register: clang_exists
+  failed_when: false
+
+- name: clang | Install clang-12 for Ubuntu
+  apt: 
+    pkg:
+      - llvm-12
+      - llvm-12-dev
+      - clang-12
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_release == "focal"
+    - clang_exists.rc != 0
+
+    

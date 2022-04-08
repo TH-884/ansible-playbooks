@@ -1,0 +1,33 @@
+---
+# tasks file for Linux (Build)
+
+- name: cmake | Download cmake source
+  get_url:
+    url: https://github.com/Kitware/CMake/releases/download/v3.23.0/cmake-3.23.0.tar.gz
+    dest: /tmp
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - cmake_exists.rc != 0
+
+- name: camke | Extract the cmake source code
+  ansible.builtin.unarchive:
+    src: /tmp/cmake-3.23.0.tar.gz
+    dest: /tmp/
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - cmake_exists.rc != 0
+
+- name: cmake | Build cmake
+  shell: |
+    ./bootstrap
+    make
+    make install
+  args:
+    chdir: /tmp/cmake-3.23.0/
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - cmake_exists.rc != 0

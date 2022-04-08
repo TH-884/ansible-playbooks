@@ -1,0 +1,18 @@
+---
+# tasks file for cmake
+
+- name: cmake | Check if cmake exists
+  shell: type cmake
+  register: cmake_exists
+  failed_when: false
+
+- name: cmake | Install package from APT
+  apt:
+    pkg:
+      - cmake
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - cmake_exists.rc != 0
+    - ansible_distribution == "Ubuntu"

@@ -1,0 +1,20 @@
+---
+# tasks file for zenith
+
+- name: zenith | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: zenith | Check if command exists
+  shell: type zenith
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: zenith | Install the command
+  shell: cargo install --git https://github.com/bvaisvil/zenith.git
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0

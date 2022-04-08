@@ -1,0 +1,36 @@
+---
+# tasks file for Linux
+
+- name: clang | Install require packages for Ubuntu
+  apt:
+    pkg:
+      - zlib1g
+      - zlib1g-dev
+    update_cache: yes
+  become: yes
+  when:
+    - ansible_distribution == "Ubuntu"
+    - clang_exists.rc != 0
+
+- name: clang | Check out the LLVM project
+  ansible.builtin.git:
+    repo: https://github.com/llvm/llvm-project.git
+    dest: /tmp/llvm-project
+  environment: "{{ proxy_env }}"
+
+- name: clang | Create build directory
+  ansible.builtin.file:
+    path: /tmp/llvm-project/build
+    state: directory
+  become: no
+
+- name: clang | Build LLVM and Clang
+  shell: |
+    cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm
+    make
+  args:
+    chdir: /tmp/llvm-project/build
+  become: yes
+  when:
+    - clang_exists.rc != 0
+    - ansible_system == "Linux"
