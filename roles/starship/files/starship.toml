@@ -50,6 +50,7 @@ error_symbol = "❌"
 read_only = " 🔒"
 read_only_style = "fg:#174276 bg:#174276"
 style = "bg:#174276 fg:white"
+format = "[](fg:#ADD8FF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 format = "[ $symbol$branch ]($style)"
