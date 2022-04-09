@@ -1,0 +1,50 @@
+---
+# tasks file for git-delta
+
+- name: git-delta | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: git-delta | Check if command exists
+  shell: type delta
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: git-delta | Install the command
+  shell: cargo install git-delta --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
+- name: git-delta | Configure gitconfig
+  git_config:
+    scope: global
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop:
+    - key: core.pager
+      value: delta
+    - key: interactive.diffFilter
+      value: delta --color-only --features=interactive
+    - key: delta.features
+      value: decorations
+    - key: delta.interactive.keep-plus-minusmarkers
+      value: false
+    - key: delta.decorations.commit-decoration-style
+      value: blue ol
+    - key: delta.decorations.commit-style
+      value: raw
+    - key: delta.decorations.file-style
+      value: omit
+    - key: delta.decorations.hunk-header-decoration-style
+      value: blue box
+    - key: delta.decorations.hunk-header-file-style
+      value: red
+    - key: delta.decorations.hunk-header-line-number-style
+      value: "#067a00"
+    - key: delta.decorations.hunk-header-style
+      value: file line-number syntax
+
