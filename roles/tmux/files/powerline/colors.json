@@ -81,12 +81,12 @@
 
 		"azure:navyblue": [17, "092642"],
 		"azure:blue3": [19, "174276"],
-		"azure:deepskyblue4": [25, "235a9f"],
-		"azure:dodgeblue1": [33, "0078d4"],
-		"azure:deepskyblue1": [39, "559ce4"],
-		"azure:turquoise2": [45, "80b9ee"],
-		"azure:skyblue1": [117, "add8ff"],
-		"azure:paleturquoise1": [159, "e3f3fd"]
+		"azure:deepskyblue4": [25, "0c5da5"],
+		"azure:dodgeblue1": [33, "9978d4"],
+		"azure:deepskyblue1": [39, "3393dd"],
+		"azure:turquoise2": [45, "68afe6"],
+		"azure:skyblue1": [117, "9dcbef"],
+		"azure:paleturquoise1": [159, "d1e6f7"]
 	},
 	"gradients": {
 		"dark_GREEN_Orange_red": [
