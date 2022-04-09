@@ -1,0 +1,20 @@
+---
+# tasks file for lsd
+
+- name: lsd | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: lsd | Check if command exists
+  shell: type lsd
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: lsd | Install the command
+  shell: cargo install lsd --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
