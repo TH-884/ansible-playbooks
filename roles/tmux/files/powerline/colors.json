@@ -77,7 +77,16 @@
 		"solarized:violet": [13, "6c71c4"],
 		"solarized:blue": [4, "268bd2"],
 		"solarized:cyan": [6, "2aa198"],
-		"solarized:green": [2, "859900"]
+		"solarized:green": [2, "859900"],
+
+		"azure:navyblue": [17, "092642"],
+		"azure:blue3": [19, "174276"],
+		"azure:deepskyblue4": [25, "235a9f"],
+		"azure:dodgeblue1": [33, "0078d4"],
+		"azure:deepskyblue1": [39, "559ce4"],
+		"azure:turquoise2": [45, "80b9ee"],
+		"azure:skyblue1": [117, "add8ff"],
+		"azure:paleturquoise1": [159, "e3f3fd"]
 	},
 	"gradients": {
 		"dark_GREEN_Orange_red": [
