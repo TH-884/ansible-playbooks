@@ -1,0 +1,20 @@
+---
+# tasks file for xsv
+
+- name: xsv | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: xsv | Check if command exists
+  shell: type xsv
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: xsv | Install the command
+  shell: cargo install xsv --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
