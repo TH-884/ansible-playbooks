@@ -7,7 +7,7 @@
   failed_when: false
 
 - name: ripgrep | Check if command exists
-  shell: type ripgrep
+  shell: type rg
   register: command_exists
   failed_when: false
   when:
