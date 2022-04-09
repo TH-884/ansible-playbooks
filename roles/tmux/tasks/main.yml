@@ -87,3 +87,14 @@
   when:
     - ansible_system == "Linux"
     - pip3_exists.rc == 0
+
+- name: tmux | Chnage $TERM environment variable to xterm-256color
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export TERM=xterm-256color
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - tmux"
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
