@@ -9,19 +9,19 @@ command_timeout = 1000
 
 # Format Powerline prompt
 format = """
-[╭](fg:#666666)[$fill](fg:#666666)
-[│](fg:#666666)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
-[ ](fg:#666666 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#235A9F)$git_branch[\uE0B0](fg:#235A9F bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#559CE4)$time[\uE0B0](fg:#559CE4 bg:none) 
-[╰](fg:#666666)$shell$character """
+[╭](fg:#778997 bold)[$fill](fg:#778997 bold)
+[│](fg:#778997 bold)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
+[ ](fg:#778997 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#0C5DA5)$git_branch[\uE0B0](fg:#0C5DA5 bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#3393DD)$time[\uE0B0](fg:#3393DD bg:none) 
+[╰](fg:#778997 bold)$shell$character """
 
 [aws]
 symbol = "[](fg:#F0861E)"
-format = '[on](fg:#ADD8FF) [$symbol ($profile )(\($region\) )(\[$duration\])]($style)'
+format = '[on](fg:#9DCBEF) [$symbol ($profile )(\($region\) )(\[$duration\])]($style)'
 style = "fg:#A65117"
 disabled = false
 
 [azure]
-format = "[on](fg:#ADD8FF) [$symbol( $subscription)]($style)"
+format = "[on](fg:#9DCBEF) [$symbol( $subscription)]($style)"
 symbol = "[ﴃ](fg:#0078D4)"
 style = "fg:#174276"
 disabled = false
@@ -38,7 +38,7 @@ charging_symbol = "[ ](fg:green)"
 discharging_symbol = "[💦](fg:yellow)"
 unknown_symbol = "[ ](fg:gray)"
 empty_symbol = "[ ](fg:red)"
-style = "fg:#235A9F"
+style = "fg:#0C5DA5"
 format = "[$symbol:$persentage]($style)"
 disabled = false
 
@@ -51,19 +51,19 @@ error_symbol = "❌"
 read_only = " 🔒"
 read_only_style = "fg:#174276 bg:#174276"
 style = "bg:#174276 fg:white"
-format = "[](fg:#ADD8FF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
+format = "[](fg:#9DCBEF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
 
 [dotnet]
-symbol = "[](fg:#ADD8FF bold)"
+symbol = "[](fg:#9DCBEF bold)"
 style = "fg:#0078D4"
-format = "[$symbol ($version )([什](fg:#ADD8FF) $tfm)]($style)"
+format = "[$symbol ($version )([什](fg:#9DCBEF) $tfm)]($style)"
 
 [fill]
 symbol = "─"
 
 [git_branch]
 format = "[ $symbol$branch ]($style)"
-style = "bg:#235A9F fg:white"
+style = "bg:#0C5DA5 fg:white"
 
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
@@ -93,14 +93,14 @@ disabled = false
 
 [localip]
 ssh_only = false
-format = "[](fg:#ADD8FF) [$localipv4](fg:#0078D4)"
+format = "[](fg:#9DCBEF) [$localipv4](fg:#0078D4)"
 disabled = false
 
 [memory_usage]
-format = "[$symbol](fg:#ADD8FF) [$ram](fg:#599CE4)( [|](fg:#ADD8FF) [$swap](fg:#0078D4))($style)"
+format = "[$symbol](fg:#9DCBEF) [$ram](fg:#599CE4)( [|](fg:#9DCBEF) [$swap](fg:#0078D4))($style)"
 threshold = -1
 symbol = ""
-style = "fg:#ADD8FF"
+style = "fg:#9DCBEF"
 disabled = false
 
 [package]
@@ -126,11 +126,11 @@ disabled = false
 [time]
 disabled = false
 format = "[  $time ]($style)"
-style = "bg:#559CE4 fg:white"
+style = "bg:#3393DD fg:white"
 
 [username]
 style_root = "bold fg:#DC322F"
-style_user = "bold fg:#559CE4"
+style_user = "bold fg:#3393DD"
 show_always = true
-format = "[](fg:#ADD8FF bold) [$user]($style)"
+format = "[](fg:#9DCBEF bold) [$user]($style)"
 disabled = false
