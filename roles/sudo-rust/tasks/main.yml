@@ -1,0 +1,16 @@
+---
+# tasks file for rust
+- name: rust | Check if existing rustup
+  shell: which rustup
+  register: rustup_exists
+  failed_when: false
+  become: yes
+  when:
+    - ansible_system == "Linux"
+
+- name: rust | Install tasks for Linux
+  ansible.builtin.import_tasks:
+    file: linux.yaml
+  when:
+    - rustup_exists.stdout == ""
+    - ansible_system == "Linux"

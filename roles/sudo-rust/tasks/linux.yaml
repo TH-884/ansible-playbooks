@@ -1,0 +1,17 @@
+---
+# tasks file for Linux
+
+- name: rust | Download rustup install script
+  ansible.builtin.uri:
+    url: https://sh.rustup.rs
+    return_content: yes
+  register: rustup_installer
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: rust | Run rustup installer
+  ansible.builtin.shell:
+    cmd: sh -s -- -y
+    stdin: "{{ rustup_installer.content }}"
+  become: yes
+  environment: "{{ proxy_env }}"
