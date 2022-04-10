@@ -1,0 +1,60 @@
+---
+# tasks file for exa
+
+- name: exa | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: exa | Check if command exists
+  shell: type exa
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: exa | Install the command
+  shell: cargo install exa --locked
+  environment: "{{ proxy_env }}"
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
+- name: exa | Check if bash innstaled
+  shell: type bash
+  register: bash_exists
+  when:
+    - ansible_system == "Linux"
+
+- name: exa | Check if command installed
+  shell: which exa
+  register: command_location
+  when:
+    - cargo_exists.rc == 0
+
+- name: exa | Create symbolic link for other users
+  ansible.builtin.file:
+    src: "{{ command_location.stdout }}"
+    dest: /usr/local/bin/exa
+    state: link
+  become: yes
+  when:
+    - command_location.rc == 0
+
+# LS_COLORS:
+# 
+- name: exa | Set alias and color for exa
+  ansible.builtin.blockinfile:
+    path: "/root/.bashrc"
+    block: |
+      alias l='exa --icons -F'
+      alias ll='exa --header --group --icons -alF'
+      alias la='exa --icons -a'
+      alias lt='exa --icons --tree -F'
+      export EXA_COLORS="da=01;32"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - exa"
+  become: yes 
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.rc == 0
+    - command_location.rc == 0
