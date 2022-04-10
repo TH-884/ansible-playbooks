@@ -6,4 +6,4 @@
       https_proxy: "{{ lookup('env', 'https_proxy') | default('') }}"
   roles:
     - rust
-    - xsv
+    - gping
