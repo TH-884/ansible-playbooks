@@ -167,3 +167,21 @@
   when:
     - ansible_distribution == "Ubuntu"
     - ctop_exists.rc != 0
+
+- name: docker-bench-security | Download Docker Bench for Security from GitHub
+  ansible.builtin.git:
+    repo: https://github.com/docker/docker-bench-security.git
+    dest: /tmp/docker-bench-security
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux" 
+
+- name: docker-bench-security | Install Docker Bench for Security
+  ansible.builtin.shell: |
+    sh docker-bench-security.sh
+  args:
+    chdir: /tmp/docker-bench-security
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
