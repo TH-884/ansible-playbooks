@@ -1,0 +1,43 @@
+---
+# tasks file for bandwhich
+
+- name: bandwhich | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: bandwhich | Check if command exists
+  shell: type bandwhich
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: bandwhich | Install the command
+  shell: cargo install bandwhich --locked
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
+- name: bandwhich | Check if command installed
+  shell: which bandwhich
+  register: command_location
+  when:
+    - cargo_exists.rc == 0
+
+- name: bandwhich | Set capaility to command
+  shell: |
+    setcap cap_sys_ptrace,cap_dac_read_search,cap_net_raw,cap_net_admin+ep "{{ command_location.stdout }}"
+  become: yes
+  when:
+    - command_location.rc == 0
+
+- name: bandwhich | Create symbolic link fromm root path to command
+  ansible.builtin.file:
+    src: "{{ command_location.stdout }}"
+    dest: /usr/local/bin/bandwhich
+    state: link
+  become: yes
+  when:
+    - command_location.rc == 0
+
