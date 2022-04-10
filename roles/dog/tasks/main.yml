@@ -1,0 +1,53 @@
+---
+# tasks file for dog
+
+- name: dog | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: dog | Check if command exists
+  shell: type dog
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: dog | Download release package for dog
+  ansible.builtin.get_url:
+    url: https://github.com/ogham/dog/releases/download/v0.1.0/dog-v0.1.0-x86_64-unknown-linux-gnu.zip
+    dest: /tmp/
+    force: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - command_exists.rc != 0
+
+- name: dog | Extract release package for dog
+  ansible.builtin.unarchive:
+    src: /tmp/dog-v0.1.0-x86_64-unknown-linux-gnu.zip
+    dest: /tmp/
+  when:
+    - ansible_system == "Linux"
+    - command_exists.rc != 0
+
+- name: dog | Copy binary file to ~/.local/bin
+  ansible.builtin.file:
+    src: /tmp/bin/dog
+    dest: "{{ ansible_env.HOME }}/.local/bin/dog"
+    state: hard
+  when:
+    - ansible_system == "Linux"
+    - command_exists.rc != 0
+
+- name: dog | Copy the bash completion file
+  ansible.builtin.file:
+    src: /tmp/completions/dog.bash
+    dest: /usr/share/bash-completion/completions/dog
+    state: hard
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - command_exists.rc != 0
+
+
