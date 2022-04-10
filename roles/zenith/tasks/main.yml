@@ -15,6 +15,7 @@
 
 - name: zenith | Install the command
   shell: cargo install --git https://github.com/bvaisvil/zenith.git
+  environment: "{{ proxy_env }}"
   when:
     - cargo_exists.rc == 0
     - command_exists.rc != 0

@@ -15,6 +15,7 @@
 
 - name: ripgrep | Install the command
   shell: cargo install ripgrep --locked
+  environment: "{{ proxy_env }}"
   when:
     - cargo_exists.rc == 0
     - command_exists.rc != 0

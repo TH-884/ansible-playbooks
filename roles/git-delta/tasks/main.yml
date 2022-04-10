@@ -15,6 +15,7 @@
 
 - name: git-delta | Install the command
   shell: cargo install git-delta --locked
+  environment: "{{ proxy_env }}"
   when:
     - cargo_exists.rc == 0
     - command_exists.rc != 0
