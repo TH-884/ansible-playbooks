@@ -1,0 +1,22 @@
+---
+# tasks for 
+
+- name:
+  apt:
+    name: ['make', 'm4', 'gcc', 'bubblewrap']
+    state: present
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: opam | Initialize opam.
+  shell: |
+    eval $(opam env)
+    opam init
+
+- name: opam | Add script to .bashrc
+  blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      eval "$(opam env)"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - opam"
+  become: no

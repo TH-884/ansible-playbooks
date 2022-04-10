@@ -1,0 +1,48 @@
+---
+# tasks file for opam
+
+- name: opam | Ensure pip3 installed
+  shell: type pip3
+  register: pip3_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: opam | Install pexpect module.
+  pip:
+    name: pexpect
+    executable: pip3
+    extra_args: --user
+  environment: "{{ proxy_env }}"
+  when:
+    - pip3_exists.rc == 0
+
+- name: opam | Make a temporary directory.
+  tempfile:
+    state: directory
+  register: directory
+
+- name: opam | Download the install script.
+  get_url:
+    url: "https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh"
+    dest: "{{ directory.path }}"
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+
+- name: opam | Execute the install script.
+  expect:
+    command: "sh {{ directory.path }}/install.sh"
+    responses:
+      '## Where should it be installed ?': "/usr/local/bin"
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+
+- name: opam | Install tasks for Ubuntu
+  ansible.builtin.import_tasks:
+    file: ubuntu.yaml
+  when:
+    - ansible_distribution == "Ubuntu"
