@@ -51,7 +51,7 @@ error_symbol = "❌"
 read_only = " 🔒"
 read_only_style = "fg:#174276 bg:#174276"
 style = "bg:#174276 fg:white"
-format = "[](fg:#9DCBEF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
+format = "[ﱮ](fg:#9DCBEF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
 
 [dotnet]
 symbol = "[](fg:#9DCBEF bold)"
