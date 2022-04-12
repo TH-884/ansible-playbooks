@@ -5,7 +5,6 @@
   apt:
     pkg:
       - tmux
-      - ncurses-tmux
     update_cache: yes
   become: yes
   environment: "{{ proxy_env }}"
