@@ -1,0 +1,8 @@
+---
+# tasks file for ntp-client
+
+- name: ntp-client | Ensure ntp client enabled
+  ansible.builtin.import_tasks:
+    file: linux.yaml
+  when:
+    - ansible_system == "Linux"

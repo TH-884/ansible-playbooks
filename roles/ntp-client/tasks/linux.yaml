@@ -1,0 +1,23 @@
+---
+# tasks file for Linux
+- name: ntp-client | Ensure ntp client installed
+  apt:
+    pkg:
+      - ntpdate
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+
+- name: ntp-client | Ensure ntp server exisits
+  ansible.builtin.blockinfile:
+    path: /etc/systemd/timesyncd.conf
+    block: |
+      NTP=ntp.jst.mfeed.ad.jp
+      RootDistanceMaxSec=5
+      PollIntervalMinSec=32
+      PollIntervalMaxSec=2048
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - ntp-client"
+  become: yes
+
