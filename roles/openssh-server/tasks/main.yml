@@ -1,6 +1,15 @@
 ---
 # tasks file for openssh-server
 
+- name: openssh-server | Ensure openssh-server installed
+  apt:
+    pkg:
+      - openssh-server
+    update_cache: yes
+  become: yes
+  when:
+    - ansible_distribution == "Ubuntu"
+
 - name: openssh-server | Ensure sshd_config exists
   ansible.builtin.shell: cat /etc/ssh/sshd_config
   register: sshd_config_exists

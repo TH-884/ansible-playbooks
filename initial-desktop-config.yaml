@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  vars:
+    proxy_env:
+      http_proxy: "{{ lookup('env', 'http_proxy') | default('') }}"
+      https_proxy: "{{ lookup('env', 'https_proxy') | default('') }}"
+  roles:
+    - sudoers
+    - openssh-server
+    - xrdp
+    - ntp-client
+    - golang
+    - docker
+    - docker-cli-tools
+    - powershell
+    - dotnet5-sdk
+    - firacode
+    - rust
+    - starship
+    - tmux

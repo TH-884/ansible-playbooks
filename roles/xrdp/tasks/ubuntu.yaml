@@ -68,3 +68,13 @@
     state: hard
   become: yes
 
+- name: xrdp | Check if ufw installed
+  shell: which ufw
+  register: ufw_exists
+  failed_when: false
+
+- name: xrdp | Allow xrd port on ufw
+  shell: "{{ ufw_exists.stdout }} allow 3389/tcp"
+  become: yes
+  when:
+    - ufw_exists.rc == 0
