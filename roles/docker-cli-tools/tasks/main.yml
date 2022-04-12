@@ -185,3 +185,38 @@
   environment: "{{ proxy_env }}"
   when:
     - ansible_system == "Linux"
+
+- name: docker-compose | Check if docker-compose exists
+  shell: which docker-compose
+  register: docker_compose_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: docker-compose | Remove old docker-compose if exists
+  ansible.builtin.file:
+    path: "{{ docker_compose_exists.stdout }}"
+    state: absent
+  become: yes
+  when:
+    - ansible_system == "Linux"
+    - docker_compose_exists.rc == 0
+
+- name: docker-compse | Install docker compose latest
+  ansible.builtin.get_url:
+    url: "https://github.com/docker/compose/releases/download/1.29.1/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+
+- name: docker-compose-plugin | Install docker compose plugin(v2)
+  apt:
+    pkg:
+      - docker-compose-plugin
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
