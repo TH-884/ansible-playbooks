@@ -14,7 +14,7 @@
     - cargo_exists.rc == 0
 
 - name: just | Install the command
-  shell: cargo install just --locked
+  shell: bash -lc "cargo install just --locked"
   environment: "{{ proxy_env }}"
   when:
     - cargo_exists.rc == 0

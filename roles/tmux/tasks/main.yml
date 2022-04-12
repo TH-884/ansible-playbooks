@@ -88,11 +88,32 @@
     - ansible_system == "Linux"
     - pip3_exists.rc == 0
 
+- name: tmux | Check if LC_ALL defined
+  ansible.builtin.shell: |
+    echo $LC_ALL
+  register: lc_all_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc
+
 - name: tmux | Chnage $TERM environment variable to xterm-256color
   ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
     block: |
       export TERM=xterm-256color
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - tmux"
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - pip3_exists.rc == 0
+
+- name: tmux | Chnage $TERM environment variable to xterm-256color (when LC_ALL not exists)
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      export TERM=xterm-256color
+      export LC_ALL=en_US.UTF-8
     marker: "#{mark} ANSIBLE MANAGED BLOCK - tmux"
   become: no
   when:

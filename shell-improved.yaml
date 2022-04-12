@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  vars:
+    proxy_env:
+      http_proxy: "{{ lookup('env', 'http_proxy') | default('') }}"
+      https_proxy: "{{ lookup('env', 'https_proxy') | default('') }}"
+  roles:
+    - cmake
+    - clang
+    - rust
+    - just
+    - fzf
+    - starship
+    - bat
+    - lsd
+    - exa
+    - fd-find
+    - fselect
+    - git-delta
+    - hexyl
+    - hyperfine
+    - csview
+    - xsv
+    - navi
+    - tealdeer
+    - watchexec-cli
+    - ripgrep
+    - skim
+    - tmux
+
+

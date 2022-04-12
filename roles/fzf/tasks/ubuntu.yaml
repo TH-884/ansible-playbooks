@@ -8,6 +8,8 @@
   environment: "{{ proxy_env }}"
 
 - name: fzf | Execute fzf install script
-  ansible.builtin.shell: "{{ ansible_env.HOME }}/.fzf/install"
+  ansible.builtin.shell: bash -lc .fzf/install
+  args:
+    chdir: "{{ ansible_env.HOME }}"
   become: no
   environment: "{{ proxy_env }}"

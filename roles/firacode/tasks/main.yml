@@ -1,8 +1,27 @@
 ---
 # tasks file for firacode
 
+- name: firacode | Check if fontconfig exists
+  shell: type fc-list
+  register: fontconfig_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: firacode | Ensure fontconfig installed
+  apt:
+    pkg:
+      - fontconfig
+      - unzip
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - fontconfig_exists.rc != 0
+
 - name: firacode | Check if Fira Code Fonts exsists
-  shell: fc-list | grep "Fira Code"
+  shell: bash -lc "fc-list"
   register: check_font
   changed_when: check_font.stdout.find('Fira Code') == -1
   when:
@@ -41,11 +60,11 @@
     - ansible_system == "Linux"
 
 - name: firacode | Update font caches
-  shell: fc-cache -vf
+  shell: bash -lc "fc-cache -vf"
   changed_when: false
 
 - name: firacode | Check if Fira Code Fonts exsists again
-  shell: fc-list | grep "Fira Code"
+  shell: bash -lc "fc-list"
   changed_when: false
   failed_when: check_font.stdout.find('Fira Code') == -1
   when:

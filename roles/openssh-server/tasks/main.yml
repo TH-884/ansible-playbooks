@@ -1,0 +1,88 @@
+---
+# tasks file for openssh-server
+
+- name: openssh-server | Ensure sshd_config exists
+  ansible.builtin.shell: cat /etc/ssh/sshd_config
+  register: sshd_config_exists
+  failed_when: false
+  when:
+    ansible_system == "Linux"
+
+- name: opensshe-server | Set ssh port
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^Port"
+    insertafter: "#Port"
+    line: "Port 22"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Disable password authentication
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    insertafter: "#PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Disable Root login
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    insertafter: "#PermitRootLogin"
+    line: "PermitRootLogin no"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Enable public key authentication
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PubkeyAuthentication"
+    insertafter: "#PubkeyAuthentication"
+    line: "PubkeyAuthentication yes"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Disable Challenge response authentication
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ChallengeResponseAuthentication"
+    insertafter: "#ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Prohibit empty password
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitEmptyPasswords"
+    insertafter: "#PermitEmptyPasswords"
+    line: "PermitEmptyPasswords no"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Ignore using rhosts
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^IgnoreRhosts"
+    insertafter: "#IgnoreRhosts"
+    line: "IgnoreRhosts yes"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Disable using PAM
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^UsePAM"
+    insertafter: "#UsePAM"
+    line: "UsePAM no"
+  become: yes
+  when: sshd_config_exists.rc == 0
+
+- name: openssh-server | Restart sshd service
+  service:
+    name: sshd
+    state: restarted
+  become: yes
+  when: sshd_config_exists.rc == 0
