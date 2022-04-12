@@ -1,0 +1,21 @@
+---
+# tasks file for tokei
+
+- name: tokei | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: tokei | Check if command exists
+  shell: type tokei
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: tokei | Install the command
+  shell: cargo install tokei --locked
+  environment: "{{ proxy_env }}"
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
