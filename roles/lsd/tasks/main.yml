@@ -19,3 +19,23 @@
   when:
     - cargo_exists.rc == 0
     - command_exists.rc != 0
+
+- name: lsd| Check if bash innstaled
+  shell: type bash
+  register: bash_exists
+  when:
+    - ansible_system == "Linux"
+
+- name: lsd | Set alias and color for lsd
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      alias l='lsd -F'
+      alias ll='lsd -alF'
+      alias la='lsd -aF'
+      alias lt='lsd --tree -F'
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - lsd"
+  become: yes 
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.rc == 0
