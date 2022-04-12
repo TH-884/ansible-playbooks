@@ -11,5 +11,5 @@
   ansible.builtin.import_tasks:
     file: linux.yaml
   when:
-    - rustup_exists.rc == 0
     - ansible_system == "Linux"
+    - rustup_exists.rc != 0
