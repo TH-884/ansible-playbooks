@@ -1,0 +1,49 @@
+---
+# tasks file for glances
+
+- name: glances | Check if glances exists
+  shell: type glances
+  register: glances_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: glances | Check if pip3 installed
+  shell: type pip3
+  register: pip3_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+    - glances_exists.rc != 0
+
+- name: glances | Install dependent packages from APT
+  apt:
+    pkg:
+      - python3-pip
+      - build-essential
+      - python3-dev
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - glances_exists.rc != 0
+
+- name: glances | Check if pip3 installed again
+  shell: type pip3
+  register: pip3_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+    - glances_exists.rc != 0
+
+- name: glances | Install packages from pip3
+  pip:
+    name:
+      - Glances
+      - PySensors3
+    executable: pip3
+    extra_args: --user
+  environment: "{{ proxy_env }}"
+  when:
+    - pip3_exists.rc == 0
