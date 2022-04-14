@@ -7,7 +7,7 @@
   failed_when: false
 
 - name: tealdeer | Check if command exists
-  shell: type tealdeer
+  shell: type tdlr
   register: command_exists
   failed_when: false
   when:
@@ -31,3 +31,61 @@
     - cargo_exists.rc == 0
     - command_exists.rc != 0
 
+- name: tealdeer | Create directory for config
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/tealdeer"
+    state: directory
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+
+- name: tealdeer | Create directory for cache
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/tealdeer"
+    state: directory
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+
+- name: tealdeer | Create directory for pages
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/tealdeer/tldr-pages"
+    state: directory
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+
+- name: tealdeer | Create directory for custom pages
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/share/tealdeer/pages"
+    state: directory
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+
+- name: tealdeer | Copy tealdeer config file
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/config.toml"
+    dest: "{{ ansible_env.HOME }}/.config/tealdeer/config.toml"
+    state: hard
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+
+- name: exa | Check if bash innstaled
+  shell: type bash
+  register: bash_exists
+  when:
+    - ansible_system == "Linux"
+    - cargo_exists.rc == 0
+  
+- name: tealdeer | Set default language as Japanese
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      alias tldr='tldr -L ja'
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - tealdeer"
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.rc == 0
+    - cargo_exists.rc == 0
