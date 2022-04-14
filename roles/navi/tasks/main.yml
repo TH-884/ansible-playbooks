@@ -19,3 +19,25 @@
   when:
     - cargo_exists.rc == 0
     - command_exists.rc != 0
+
+- name: navi | Check if command exists again
+  shell: type navi
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: navi | Get navi config path
+  shell: navi info config-path
+  register: navi_config_path
+  when:
+    - command_exists.rc == 0
+
+- name: navi | Copy navi config file
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/config.yaml"
+    dest: "{{ navi_config_path.stdout }}"
+    state: hard
+    force: yes
+  when:
+    - command_exists.rc == 0
