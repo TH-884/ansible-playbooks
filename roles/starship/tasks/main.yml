@@ -1,12 +1,21 @@
 ---
 # tasks file for starship
 
+- name: starship | Check if starship exists
+  ansible.builtin.shell: type starship
+  register: starship_exists
+  failed_when: false
+  when:
+    ansible_system == "Linux"
+
 - name: starship | Install Starship using cargo
   shell: |
     source "{{ ansible_env.HOME }}/.profile"
     cargo install starship --locked
   environment: "{{ proxy_env }}"
   become: no
+  when:
+    starship_exists.rc != 0
 
 - name: starship | Check if bash exists
   shell: type bash

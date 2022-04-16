@@ -23,7 +23,7 @@ disabled = false
 [azure]
 format = "[on](fg:#9DCBEF) [$symbol( $subscription)]($style)"
 symbol = "[ﴃ](fg:#0078D4)"
-style = "fg:#174276"
+style = "fg:#599CE4"
 disabled = false
 
 [[battery.display]]
