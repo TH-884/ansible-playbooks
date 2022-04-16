@@ -1,0 +1,36 @@
+---
+# tasks file for ubuntu
+
+- name: az | Install dependent packages from apt
+  ansible.builtin.apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - apt-transport-https
+      - lsb-release
+      - gnupg
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: az | Download and install the Microsoft signature key
+  ansible.builtin.apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    keyring: /etc/apt/trusted.gpg.d/microsoft.gpg
+  become: yes
+  environment: "{{ proxy_env }}" 
+
+- name: az | Add the Azure CLI software repository
+  ansible.builtin.shell: |
+    AZ_REPO=$(lsb_release -cs)
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: az | Update the repository and install the azure-cli package
+  ansible.builtin.apt:
+    pkg:
+      - azure-cli
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
