@@ -1,0 +1,19 @@
+#!/bin/env bash
+
+set -eu
+
+PLAYBOOK_NAME="navi"
+
+PLAYBOOK_ROOT_DIRECTORY="ansible-playbooks"
+CURRENT_DIRECTORY=`pwd`
+PLAYBOOK_DIR=`pwd | sed -r 's#(.*[/]?ansible-playbooks)([/]?.*)#\1#'`
+
+if [[ "$PLAYBOOK_DIR" == *$PLAYBOOK_ROOT_DIRECTORY* ]]; then
+    cd "$PLAYBOOK_DIR";
+    export PLAYBOOK_DIR
+else
+    echo -e "\033[38;2;220;50;47mERROR: No such directory '$PLAYBOOK_ROOT_DIRECTORY'";
+    exit 1;
+fi
+
+ansible-playbook -c localhost ${PLAYBOOK_DIR}/localhost/${PLAYBOOK_NAME}.yaml
