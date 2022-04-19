@@ -1,0 +1,54 @@
+---
+# tasks file for fnm
+
+- name: fnm | Check if cargo exists
+  shell: test cargo
+  register: cargo_exists
+  failed_when: false
+
+- name: fnm | Check if command exists
+  shell: type fnm
+  register: command_exists
+  failed_when: false
+  when:
+    - cargo_exists.rc == 0
+
+- name: fnm | Install the command
+  shell: cargo install fnm --locked
+  environment: "{{ proxy_env }}"
+  when:
+    - cargo_exists.rc == 0
+    - command_exists.rc != 0
+
+- name: fnm | Check if bash installed
+  shell: type bash
+  register: bash_exists
+  when:
+    - ansible_system == "Linux"
+
+- name: fnm | Set shell setup for fnm
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      eval "$(fnm env --use-on-cd)"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - fnm"
+  become: no
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.rc == 0
+
+- name: fnm | Create the bash completion
+  ansible.builtin.shell:
+    fnm completions --shell bash > /tmp/fnm
+  when:
+    - bash_exists.rc == 0
+
+- name: fnm | Copy the bash completion
+  ansible.builtin.file:
+    src: /tmp/fnm
+    dest: /usr/share/bash-completion/completions/fnm 
+    state: hard
+  become: yes
+  when:
+    - bash_exists.rc == 0
+  

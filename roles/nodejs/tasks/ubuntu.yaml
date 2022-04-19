@@ -1,0 +1,11 @@
+---
+# tasks file for ubuntu
+
+- name: nodejs | Ensure node is latest
+  apt:
+    pkg: 
+      - 'nodejs'
+    state: latest
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
