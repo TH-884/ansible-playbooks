@@ -20,7 +20,7 @@
     - cargo_exists.rc == 0
     - command_exists.rc != 0
 
-- name: lsd| Check if bash innstaled
+- name: lsd | Check if bash instaled
   shell: type bash
   register: bash_exists
   when:
@@ -35,7 +35,7 @@
       alias la='lsd -aF'
       alias lt='lsd --tree -F'
     marker: "#{mark} ANSIBLE MANAGED BLOCK - lsd"
-  become: yes 
+  become: no
   when:
     - ansible_system == "Linux"
     - bash_exists.rc == 0
