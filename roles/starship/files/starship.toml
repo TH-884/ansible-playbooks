@@ -9,10 +9,10 @@ command_timeout = 1000
 
 # Format Powerline prompt
 format = """
-[╭](fg:#9AA7B2 bold)[$fill](fg:#9AA7B2 bold)
-[│](fg:#9AA7B2 bold)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
+[╭](fg:#9AA7B2)[$fill](fg:#9AA7B2)
+[│](fg:#9AA7B2)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
 [ ](fg:#9AA7B2 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#0C5DA5)$git_branch[\uE0B0](fg:#0C5DA5 bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#3393DD)$time[\uE0B0](fg:#3393DD bg:none) 
-[╰](fg:#9AA7B2 bold)$shell$character """
+[╰](fg:#9AA7B2)$shell$character """
 
 [aws]
 symbol = "[](fg:#F0861E)"
