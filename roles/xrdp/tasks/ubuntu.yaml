@@ -73,8 +73,42 @@
   register: ufw_exists
   failed_when: false
 
-- name: xrdp | Allow xrd port on ufw
+- name: xrdp | Allow xrdp port on ufw
   shell: "{{ ufw_exists.stdout }} allow 3389/tcp"
   become: yes
   when:
     - ufw_exists.rc == 0
+
+- name: xrdp | Add xrdp to ssl-cert group
+  ansible.builtin.user:
+    name: xrdp
+    group: ssl-cert
+  become: yes
+
+- name: linux-vm-tools | Download from github rep
+  ansible.builtin.git:
+    repo: https://github.com/microsoft/linux-vm-tools.git
+    dest: /tmp/linux-vm-tools
+  
+- name: linux-vm-tools | Download additional source
+  ansible.builtin.shell: |
+    git fetch -all
+    git pull origin pull/106/head:pull_106
+    git checkout pull_106
+  args:
+    chdir: /tmp/linux-vm-tools
+
+- name: linux-vm-tools | Install linux-vm-tools for Ubuntu 20.04
+  ansible.builtin.shell: |
+    chmod +x install.sh
+    ./install.sh
+  args:
+    chdir: /tmp/linux-vm-tools/ubuntu/20.04/
+  become: yes
+   
+- name: xrdp | Restart xrdp service
+  ansible.builtin.service:
+    name: xrdp
+    state: restarted
+  become: yes
+
