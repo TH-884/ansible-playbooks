@@ -1,0 +1,26 @@
+---
+# tasks file for Ubuntu
+
+- name: dotnet6-sdk | Download Microsoft package ropository
+  get_url:
+    url: https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+    dest: /tmp/packages-microsoft-prod.deb
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution_version == "20.04"
+
+- name: dotnet6-sdk | Install Micorosfot package repository
+  apt:
+    deb: /tmp/packages-microsoft-prod.deb
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: dotnet6-sdk | Install .NET 6.0 SDK
+  apt:
+    pkg:
+      - apt-transport-https
+      - dotnet-sdk-6.0
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"

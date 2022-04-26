@@ -1,0 +1,9 @@
+---
+# tasks file for dotnet6-sdk
+
+- name: dotnet6-sdk | Install tasks for Ubuntu
+  ansible.builtin.import_tasks:
+    file: ubuntu.yaml
+  when:
+    - ansible_distribution == "Ubuntu"
+

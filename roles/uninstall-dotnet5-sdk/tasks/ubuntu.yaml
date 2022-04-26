@@ -1,0 +1,28 @@
+---
+# tasks file for Ubuntu
+
+- name: dotnet5-sdk | Check dotnet exists
+  ansible.builtin.shell: |
+    type dotnet
+  failed_when: false
+  register: dotnet_exists
+
+- name: dotnet5-sdk | Check the installed version of dotnet
+  ansible.builtin.shell: |
+    dotnet --version
+  failed_when: false
+  register: dotnet_version
+  when:
+    - dotnet_exists.rc == 0
+
+- name: dotnet5-sdk | Uninstall dotnet5-sdk
+  ansible.builtin.apt:
+    pkg:
+      - dotnet-sdk-5.0
+    state: absent
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - dotnet_exists.rc == 0
+    - dotnet_version.stdout | regex_search('^5\\.') == "5." 
+

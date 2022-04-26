@@ -1,0 +1,9 @@
+---
+# tasks file for uninstall-dotnet5-sdk
+
+- name: dotnet5-sdk | Uninstall tasks for Ubuntu
+  ansible.builtin.import_tasks:
+    file: ubuntu.yaml
+  when:
+    - ansible_distribution == "Ubuntu"
+  
