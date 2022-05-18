@@ -1,0 +1,48 @@
+---
+# tasks file for neovim
+
+- name: neovim | Check if neovim exists
+  shell: type nvim
+  register: neovim_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: neovim | Install neovim for Linux
+  homebrew:
+    name: neovim
+    state: present
+    update_homebrew: yes
+  when:
+    - neovim_exists.rc != 0
+    - ansible_system == "Linux"
+
+- name: neovim | Check if bash exists
+  shell: type bash
+  register: bash_exists
+  failed_when: false
+
+- name: neovim | Set env $EDITOR to nvim
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    block: |
+      EDITOR=nvim
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - neovim"
+  when:
+    - bash_exists.rc == 0
+
+- name: neovim | Get neovim path
+  shell: which nvim
+  register: neovim_path
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: neovim | Set nvim as the default `vi`
+  ansible.builtin.shell: |
+    update-alternatives --install /usr/bin/editor editor {{ neovim_path.stdout }} 50
+    update-alternatives --quiet --set editor {{ neovim_path.stdout }}
+  become: yes
+  when:
+    - neovim_path.rc == 0
+    - ansible_system == "Linux"
