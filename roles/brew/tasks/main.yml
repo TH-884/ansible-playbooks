@@ -1,0 +1,27 @@
+---
+# tasks file for brew
+
+- name: brew | Check if brew exists
+  shell: type brew
+  register: brew_exists
+  failed_when: false
+
+- name: brew | Install brew for Linux
+  shell: |
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+    test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
+    echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile    
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_system == "Linux"
+    - brew_exists.rc != 0
+
+- name: brew | Re-tap brew
+  shell: |
+    rm -rf "/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core"
+    brew tap homebrew/core
+  when:
+    - ansible_system == "Linux"
+    - brew_exists.rc != 0
