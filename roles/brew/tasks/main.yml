@@ -17,7 +17,7 @@
     - brew_exists.rc != 0
 
 - name: brew | Get brew prefix
-  shell: brew --prefix
+  shell: /home/linuxbrew/.linuxbrew/bin/brew --prefix
   register: brew_prefix
   when:
     - ansible_system == "Linux"
