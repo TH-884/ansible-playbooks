@@ -8,9 +8,14 @@
   when:
     - ansible_system == "Linux"
 
-- name: az | Import tasks for Ubuntu
-  ansible.builtin.import_tasks:
-    file: ubuntu.yaml
+- name: az | Install az commands by homebrew
+  homebrew:
+    name:
+      - openssl@1.1
+      - python@3.10
+      - libffi
+      - az
+    update_homebrew: yes
   when:
-    - ansible_distribution == "Ubuntu"
+    - ansible_system == "Linux"
     - az_exists.rc != 0
