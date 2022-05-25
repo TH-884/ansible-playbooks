@@ -11,12 +11,42 @@
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
     test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-    echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile    
   environment: "{{ proxy_env }}"
   when:
     - ansible_system == "Linux"
     - brew_exists.rc != 0
+
+- name: brew | Get brew prefix
+  shell: brew --prefix
+  register: brew_prefix
+  when:
+    - ansible_system == "Linux"
+
+- name: brew | Check if bash exists
+  shell: type bash
+  register: bash_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: brew | Set env for brew to profile
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.profile"
+    block: |
+      evel "({{ brew_prefix.stdout }}/bin/brew shellenv)"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
+  when:
+    - ansible_system == "Linux"
+
+- name: brew | Set env for brew to .bash_profile
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+    block: |
+      evel "({{ brew_prefix.stdout }}/bin/brew shellenv)"
+    marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
+  when:
+    - ansible_system == "Linux"
+    - bash_exists.rc == 0
 
 - name: brew | Re-tap brew
   shell: |
