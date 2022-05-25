@@ -33,20 +33,26 @@
   ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.profile"
     block: |
-      evel "({{ brew_prefix.stdout }}/bin/brew shellenv)"
+      eval "$({{ brew_prefix.stdout }}/bin/brew shellenv)"
     marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
   when:
     - ansible_system == "Linux"
+
+- name: brew | Check if .bash_profile exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.bash_profile"
+  register: bash_profile_exists
 
 - name: brew | Set env for brew to .bash_profile
   ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.bash_profile"
     block: |
-      evel "({{ brew_prefix.stdout }}/bin/brew shellenv)"
+      eval "$({{ brew_prefix.stdout }}/bin/brew shellenv)"
     marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
   when:
     - ansible_system == "Linux"
     - bash_exists.rc == 0
+    - bash_profile_exists.stat.exists
 
 - name: brew | Re-tap brew
   shell: |
