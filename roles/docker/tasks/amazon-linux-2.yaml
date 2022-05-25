@@ -1,0 +1,19 @@
+---
+# tasks file for Amazon Linux 2
+
+- name: docker | Install package from yum
+  yum:
+    name:
+      docker
+    update_cache: yes
+    state: latest
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - docker_exists.rc != 0
+
+- name: docker | Add {{ ansible_env.USER }} to the docker group
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    group: docker
+  become: yes

@@ -33,6 +33,13 @@
   when:
     - command_exists.rc == 0
 
+- name: navi | Create navi config directory
+  ansible.builtin.file:
+    path: "{{ navi_config_path.stdout | dirname }}"
+    state: directory
+  when:
+    - command_exists.rc == 0
+
 - name: navi | Copy navi config file
   ansible.builtin.file:
     src: "{{ role_path }}/files/config.yaml"

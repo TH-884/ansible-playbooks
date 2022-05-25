@@ -35,7 +35,6 @@
   failed_when: false
   when:
     - ansible_system == "Linux"
-    - glances_exists.rc != 0
 
 - name: glances | Install packages from pip3
   pip:
@@ -47,3 +46,4 @@
   environment: "{{ proxy_env }}"
   when:
     - pip3_exists.rc == 0
+    - glances_exists.rc != 0

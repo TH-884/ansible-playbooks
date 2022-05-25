@@ -45,4 +45,14 @@
   become: yes
   when:
     - neovim_path.rc == 0
-    - ansible_system == "Linux"
+    - ansible_distribution == "Ubuntu"
+
+- name: neovim | Set nvim as the default `vi`
+  ansible.builtin.shell: |
+    update-alternatives --install /usr/bin/editor editor {{ neovim_path.stdout }} 50
+    update-alternatives --set editor {{ neovim_path.stdout }}
+  become: yes
+  when:
+    - neovim_path.rc == 0
+    - ansible_distribution == "Amazon"
+    - ansible_distribution_major_version == "2"

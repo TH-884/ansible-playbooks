@@ -1,0 +1,17 @@
+---
+# tasks file for Amazon Linux 2
+
+- name: dotnet6-sdk | Add the Microsoft package signing key
+  yum:
+    name: https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+    state: present
+  become: yes
+  environment: "{{ proxy_env }}"
+
+- name: dotnet6-sdk | Install SDK from yum
+  yum:
+    name: dotnet-sdk-6.0
+    state: present
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"

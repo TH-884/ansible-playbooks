@@ -20,4 +20,16 @@
     - ansible_distribution_release == "focal"
     - clang_exists.rc != 0
 
-    
+- name: clang | Install clang for Amazon Linux
+  ansible.builtin.yum:
+    name:
+      - llvm
+      - llvm-devel
+      - clang
+    update_cache: yes
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Amazon"
+    - ansible_distribution_major_version == "2"
+    - clang_exists.rc != 0

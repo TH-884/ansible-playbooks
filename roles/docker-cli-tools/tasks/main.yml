@@ -21,14 +21,15 @@
      - go_exists.rc == 0
 
 - name: dive | Install dive cli tool for Ubuntu
-  apt:
-    deb: https://github.com/wagoodman/dive/releases/download/v0.10.0/dive_0.10.0_linux_amd64.deb
+  homebrew:
+    name: dive
+    state: latest
+    update_homebrew: yes
   environment: "{{ proxy_env }}"
-  become: yes
   when:
     - go_exists.rc == 0
     - dive_exists.rc != 0
-    - ansible_distribution == "Ubuntu"
+    - ansible_system == "Linux"
 
 - name: lazydocker | Check if lazydocker exists
   shell: type lazydocker
@@ -166,6 +167,16 @@
   environment: "{{ proxy_env }}"
   when:
     - ansible_distribution == "Ubuntu"
+    - ctop_exists.rc != 0
+
+- name: ctop | Install ctop from brew
+  homebrew:
+    name: ctop
+    state: latest
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution != "Ubuntu"
+    - ansible_system == "Linux"
     - ctop_exists.rc != 0
 
 - name: docker-bench-security | Download Docker Bench for Security from GitHub

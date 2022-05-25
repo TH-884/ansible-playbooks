@@ -6,12 +6,14 @@
   register: tmux_exists
   failed_when: false
 
-- name: tmux | Install tasks for Ubuntu
-  ansible.builtin.import_tasks:
-    file: ubuntu-apt.yaml
+- name: tmux | Install tasks for Linux
+  homebrew:
+    name: tmux
+    state: latest
+    update_homebrew: yes
   when:
-    - ansible_distribution == "Ubuntu"
     - tmux_exists.rc != 0
+    - ansible_system == "Linux" 
 
 - name: tmux | Check if pip3 exists
   shell: type pip3
@@ -43,13 +45,17 @@
   when:
     - ansible_system == "Linux"
     - pip3_exists.rc == 0
-    
+
+- name: tmux | Retrieve Python3's site-packages directory
+  shell: |
+    python3 --version | sed -r "s/Python ([0-9]+\.[0-9]+)\.[0-9]+/\1/"
+  register: python3_version
 
 - name: tmux | Ensure Powerline configuration in tmux.conf
   ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.tmux.conf"
     block: |
-      source "{{ ansible_env.HOME }}/.local/lib/python3.8/site-packages/powerline/bindings/tmux/powerline.conf"
+      source "{{ ansible_env.HOME }}/.local/lib/python{{ python3_version.stdout }}/site-packages/powerline/bindings/tmux/powerline.conf"
       run-shell "powerline-daemon -q"
     marker: "#{mark} ANSIBLE MANAGED BLOCK - powerline"
   when:
