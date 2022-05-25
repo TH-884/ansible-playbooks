@@ -20,6 +20,7 @@
 
 - name: brew | Re-tap brew
   shell: |
+    source "{{ ansible_env.HOME }}"/.profile
     rm -rf "/home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/homebrew/homebrew-core"
     brew tap homebrew/core
   when:
