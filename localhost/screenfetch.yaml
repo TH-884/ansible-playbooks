@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  vars:
+    proxy_env:
+      http_proxy: "{{ lookup('env', 'http_proxy') | default('') }}"
+      https_proxy: "{{ lookup('env', 'https_proxy') | default('') }}"
+  roles:
+    - brew
+    - screenfetch

@@ -1,0 +1,18 @@
+---
+# tasks file for screenfetch
+
+- name: screenfetch | Check if screenfetch exists
+  shell: type screenfetch
+  register: screenfetch_exists
+  failed_when: false
+  when:
+    - ansible_system == "Linux"
+
+- name: screenfetch | Install screenfetch from homebrew
+  homebrew:
+    name: screenfetch
+    state: latest
+    update_homebrew: yes
+  when:
+    - screenfetch_exists.rc != 0
+    - ansible_system == "Linux"
