@@ -5,4 +5,7 @@
       http_proxy: "{{ lookup('env', 'http_proxy') | default('') }}"
       https_proxy: "{{ lookup('env', 'https_proxy') | default('') }}"
   roles:
+    - brew
+    - cmake
+    - clang
     - rust
