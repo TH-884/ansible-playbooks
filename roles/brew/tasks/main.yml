@@ -6,8 +6,23 @@
   register: brew_exists
   failed_when: false
 
+- name: brew | Install required packages (Ubuntu)
+  ansible.builtin.apt:
+    pkg:
+      - build-essential
+      - procps
+      - curl
+      - file
+      - git
+  become: yes
+  environment: "{{ proxy_env }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - brew_exists.rc != 0
+
 - name: brew | Install brew for Linux
   shell: |
+    DEBIAN_FRONTEND=noninteractive
     NONINTERACTIVE=true
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
@@ -38,22 +53,6 @@
     marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
   when:
     - ansible_system == "Linux"
-
-- name: brew | Check if .bash_profile exists
-  stat:
-    path: "{{ ansible_env.HOME }}/.bash_profile"
-  register: bash_profile_exists
-
-- name: brew | Set env for brew to .bash_profile
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_env.HOME }}/.bash_profile"
-    block: |
-      eval "$({{ brew_prefix.stdout }}/bin/brew shellenv)"
-    marker: "#{mark} ANSIBLE MANAGED BLOCK - homebrew"
-  when:
-    - ansible_system == "Linux"
-    - bash_exists.rc == 0
-    - bash_profile_exists.stat.exists
 
 - name: brew | Re-tap brew
   shell: |

@@ -9,9 +9,10 @@
     ansible_system == "Linux"
 
 - name: starship | Install Starship using cargo
-  shell: |
-    source "{{ ansible_env.HOME }}/.profile"
-    cargo install starship --locked
+  homebrew:
+    name:
+      - starship
+    update_homebrew: yes
   environment: "{{ proxy_env }}"
   become: no
   when:
@@ -26,7 +27,7 @@
 
 - name: starship | Add the bootstrap code for starship
   blockinfile:
-    path: "{{ ansible_env.HOME }}/.bashrc"
+    path: "{{ ansible_env.HOME }}/.profile"
     block: |
       eval "$(starship init bash)"
     marker: "#{mark} ANSIBLE MANAGED BLOCK - starship"

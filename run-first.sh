@@ -13,10 +13,17 @@ case "${DISTRIBUTION_NAME}" in
   "Ubuntu" )  install_ansible_on_ubuntu;;
 esac
 
-source ~/.profile
-
-./install/localhost/sudoers
+set +u
 ./install/localhost/brew
+set -u
+
+set +e
+PASSWORDLESS=$(sudo grep $(whoami) /etc/sudoers)
+set -e
+
+if [ -z "${PASSWORDLESS}" ]; then
+  ./install/localhost/sudoers
+fi
 
 LOCALE=$(echo ${LANG} | cut -d "." -f1)
 
