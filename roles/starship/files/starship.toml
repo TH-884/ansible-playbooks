@@ -44,7 +44,7 @@ disabled = false
 
 [character]
 format = "$symbol"
-success_symbol = "[➡](bold green)"
+success_symbol = "[➡](bold fg:#00ff00)"
 error_symbol = "❌"
 
 [directory]
@@ -108,10 +108,10 @@ style = "#ffc0cb"
 symbol = "📦"
 
 [shell]
-bash_indicator = "bash "
+bash_indicator = "[bash ](fg:#2aa198)"
 fish_indicator = "fish "
 zsh_indicator = "zsh  "
-powershell_indicator = "pwsh "
+powershell_indicator = "[pwsh ](fg:#0078D4) "
 ion_indicator = "ion  "
 elvish_indicator = "elvsh "
 tcsh_indicator = "tcsh "
@@ -120,7 +120,7 @@ cmd_indicator = "cmd "
 nu_indicator = "nush "
 unknown_indicator = "??? "
 format = "[$indicator]($style)"
-style = "fg:#0078D4 bold"
+style = "bold"
 disabled = false
 
 [time]
