@@ -69,6 +69,7 @@ symbol = "שׂ"
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
 cherry_pick = " PICKING"
+style = "bg:#0078D4"
 
 [git_status]
 format = "[ $all_status$ahead_behind ]($style)"
