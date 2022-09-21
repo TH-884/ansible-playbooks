@@ -45,11 +45,11 @@ disabled = false
 [character]
 format = "$symbol"
 success_symbol = "[➡](bold fg:#00ff00)"
-error_symbol = "❌"
+error_symbol = "[](bold fg:#ff0000)"
 
 [directory]
-read_only = " 🔒"
-read_only_style = "fg:#174276 bg:#174276"
+read_only = " "
+read_only_style = "fg:#fbbc05 bg:#174276"
 style = "bg:#174276 fg:white"
 format = "[ﱮ](fg:#9DCBEF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
 
@@ -80,7 +80,7 @@ diverged = " "
 untracked = " "
 stashed = " "
 modified = "פֿ "
-staged = '[( \($count\))](fg:#005F00 bg:#0078D4 bold)'
+staged = '[( \($count\)) ](fg:#ffffff bg:#0078D4 bold)'
 up_to_date = "[ ](fg:#ffffff bg:#0078D4)"
 renamed = "凜 "
 deleted = " "
@@ -109,10 +109,10 @@ style = "#ffc0cb"
 symbol = "📦"
 
 [shell]
-bash_indicator = "[bash ](fg:#2aa198)"
+bash_indicator = "[bash ](fg:#2aa198 bold)"
 fish_indicator = "fish "
 zsh_indicator = "zsh  "
-powershell_indicator = "[pwsh ](fg:#0078D4) "
+powershell_indicator = "[pwsh ](fg:#0078D4 bold) "
 ion_indicator = "ion  "
 elvish_indicator = "elvsh "
 tcsh_indicator = "tcsh "
