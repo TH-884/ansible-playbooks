@@ -74,7 +74,7 @@ style = "bg:#0078D4"
 [git_status]
 format = "[ $all_status$ahead_behind ]($style)"
 style = "bg:#0078D4"
-conflicted = "[](fg:#ea4353)"
+conflicted = "[ ](fg:#ea4353 bg:#0078D4)"
 ahead = "省 "
 behind = " "
 diverged = " "
