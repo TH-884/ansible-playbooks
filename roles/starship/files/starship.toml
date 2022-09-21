@@ -62,27 +62,28 @@ format = "[$symbol ($version )([什](fg:#9DCBEF) $tfm)]($style)"
 symbol = "─"
 
 [git_branch]
-format = "[ $symbol$branch ]($style)"
+format = "[ $symbol $branch ]($style)"
 style = "bg:#0C5DA5 fg:white"
+symbol = "שׂ"
 
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
-cherry_pick = "🍒 PICKING"
+cherry_pick = " PICKING"
 
 [git_status]
 format = "[ $all_status$ahead_behind ]($style)"
 style = "bg:#0078D4"
-conflicted = "💥"
-ahead = "🏎💨"
-behind = "🔙"
-diverged = "😵"
-untracked = "❔"
-stashed = "📦"
-modified = "❗"
-staged = '[(++\($count\))](fg:#005F00 bg:#0078D4 bold)'
-up_to_date = "[✔](fg:#007F00 bg:#0078D4)"
-renamed = "凜"
-deleted = ""
+conflicted = "[](fg:#ea4353)"
+ahead = "省 "
+behind = " "
+diverged = " "
+untracked = " "
+stashed = " "
+modified = "פֿ "
+staged = '[( \($count\))](fg:#005F00 bg:#0078D4 bold)'
+up_to_date = "[ ](fg:#ffffff bg:#0078D4)"
+renamed = "凜 "
+deleted = " "
 
 [hostname]
 ssh_only = false
