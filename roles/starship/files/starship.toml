@@ -79,9 +79,15 @@ format = "[ $symbol $branch ]($style)"
 style = "bg:#0C5DA5 fg:white"
 symbol = "שׂ"
 
+[git_commit]
+style = "bg:#0078D4"
+
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
 cherry_pick = " PICKING"
+style = "bg:#0078D4"
+
+[git_metrics]
 style = "bg:#0078D4"
 
 [git_status]
