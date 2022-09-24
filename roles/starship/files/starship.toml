@@ -9,10 +9,10 @@ command_timeout = 1000
 
 # Format Powerline prompt
 format = """
-[╭](fg:#9AA7B2)[$fill](fg:#9AA7B2)
-[│](fg:#9AA7B2)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
-[ ](fg:#9AA7B2 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#0C5DA5)$git_branch[\uE0B0](fg:#0C5DA5 bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#3393DD)$time[\uE0B0](fg:#3393DD bg:none) 
-[╰](fg:#9AA7B2)$shell$character """
+[╭](fg:#778997)[$fill](fg:#bdbdbd)
+[│](fg:#778997)( $username)($hostname)( $localip)( $memory_usage)( $battery)( $aws)( $azure)($dotnet)
+[ ](fg:#174276 bg:#174276)[ ](bg:#174276)[$directory](bg:#174276)[\uE0B0](fg:#174276 bg:#0C5DA5)$git_branch[\uE0B0](fg:#0C5DA5 bg:#0078D4)[$git_status](green bg:#0078D4)[\uE0B0](fg:#0078D4 bg:#3393DD)$time[\uE0B0](fg:#3393DD bg:none) 
+[╰](fg:#778997)$shell$character """
 
 [aws]
 symbol = "[](fg:#F0861E)"
@@ -42,16 +42,28 @@ style = "fg:#0C5DA5"
 format = "[$symbol:$persentage]($style)"
 disabled = false
 
+[c]
+disabled = false
+
 [character]
 format = "$symbol"
 success_symbol = "[➡](bold fg:#00ff00)"
 error_symbol = "[](bold fg:#ff0000)"
 
 [directory]
+home_symbol = ""
+truncation_symbol = "…/"
 read_only = " "
 read_only_style = "fg:#fbbc05 bg:#174276"
+repo_root_style = "fg:#ffffff bg:#174276"
+repo_root_format=" [$before_root_path]($style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 style = "bg:#174276 fg:white"
-format = "[ﱮ](fg:#9DCBEF bg:#174276) [$path]($style)[$read_only]($read_only_style) "
+use_os_path_sep = true
+format = "[ﱮ](fg:#ffffff bg:#174276) [$path]($style)[$read_only]($read_only_style) "
+
+[docker_context]
+symbol = ""
+disabled = false
 
 [dotnet]
 symbol = "[](fg:#9DCBEF bold)"
@@ -60,6 +72,7 @@ format = "[$symbol ($version )([什](fg:#9DCBEF) $tfm)]($style)"
 
 [fill]
 symbol = "─"
+style = "fg:#778997"
 
 [git_branch]
 format = "[ $symbol $branch ]($style)"
@@ -78,7 +91,7 @@ conflicted = "[ ](fg:#ea4353 bg:#0078D4)"
 ahead = "省 "
 behind = " "
 diverged = " "
-untracked = " "
+untracked = "[？ ](fg:#ffffff bg:#0078d4 bold)"
 stashed = " "
 modified = "פֿ "
 staged = '[( \($count\)) ](fg:#ffffff bg:#0078D4 bold)'
@@ -88,9 +101,10 @@ deleted = " "
 
 [hostname]
 ssh_only = false
+ssh_symbol = "廬 "
 trim_at = ""
 style = "bold fg:#0078D4"
-format = "[(@$hostname)]($style)"
+format = "[(@$hostname) $ssh_symbol]($style)"
 disabled = false
 
 [localip]
