@@ -3,6 +3,7 @@
 function install_ansible_on_ubuntu () {
   sudo apt install python3-pip
   pip3 install --user ansible
+  source ~/.profile
   return 0
 }
 
